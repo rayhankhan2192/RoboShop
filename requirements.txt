@@ -1,1 +1,8 @@
 django
+djangorestframework
+django-cors-headers
+requests
+djoser
+mysqlclient
+pillow
+django-froala-editor
