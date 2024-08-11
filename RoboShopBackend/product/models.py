@@ -46,32 +46,17 @@ class MyFroalaField(FroalaField):
     
 class Category(models.Model):
     name = models.CharField(max_length=300)
-    slug = models.SlugField()
     show_on_home = models.BooleanField(default=False, null=True, blank=True)
     image = models.ImageField(upload_to='categoryImages/', null=True, blank=True)
-    
-    class Meta:
-        ordering = ('name',)
-        
-    def __str__(self):
-            return self.name
-        
-    def get_absolute_url(self):
-        return f'/{self.slug}/'
+    def __str__(self) -> str:
+        return self.name
 
 class Sub_category(models.Model):
-    name = models.CharField(max_length=300)
-    slug = models.SlugField()
-    category = models.ForeignKey(Category, on_delete= models.CASCADE)
-    
-    class Meta:
-        ordering = ('name',)
-        
+    name = models.CharField(max_length=200)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='SubCategoryImage/',null=True,blank=True)
     def __str__(self):
-        return self.name
-        
-    def get_absolute_url(self):
-        return f'/{self.slug}/'    
+        return self.name    
         
         
 
@@ -122,36 +107,6 @@ class Product(models.Model):
     
     def __str__(self):
         return self.name
-    
-    def get_absolute_url(self):
-        return f'{self.category.slug}/{self.slug}/'
-    
-    def get_image(self):
-        if self.image:
-            return 'http://127.0.0.1:8000' + self.image.url
-        return ''
-    
-    def make_thumbnail(self, image, size=(300, 200)):
-        img = Image.open(image)
-        img.convert('RGB')
-        img.thumbnail(size)
-        
-        thumb_io = BytesIO()
-        img.save(thumb_io, 'JPEG', quality = 85)
-        thambnail = File(thumb_io, name=image.name)
-        return thambnail
-    
-    def get_thumbnail(self):
-        if self.thumbnail:
-            # return 'http://127.0.0.1:8000' + self.thumbnail.url
-            return 'http://localhost:8000' + self.thumbnail.url
-        else:
-            if self.image:
-                self.thumbnail = self.make_thumbnail(self.image)
-                self.save()
-                return 'http://127.0.0.1:8000' + self.thumbnail.url
-            else:
-                return ''
 
 class ProductMedia(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
@@ -159,3 +114,26 @@ class ProductMedia(models.Model):
 
     def __str__(self) -> str:
         return self.product.name
+    
+    
+class HomePage(models.Model):
+    key = models.IntegerField(blank=True, null=True)
+    logo = models.ImageField()
+    shop_poster = models.ImageField()
+    phone = models.CharField(max_length=15)
+    facebook = models.CharField(max_length=200)
+    youtube = models.CharField(max_length=200)
+    linkdin = models.CharField(max_length=200)
+    twiter = models.CharField(max_length=200)
+    instragram = models.CharField(max_length=200)
+    
+class HomeSlide(models.Model):
+    isActive = models.BooleanField(default=True)
+    poster = models.ImageField()
+    link = models.URLField(null=True, blank=True)
+
+class Specialoffer(models.Model):
+    isactive = models.BooleanField(default=True)
+    poster = models.ImageField()
+    link = models.URLField(null=True,blank=True)
+    

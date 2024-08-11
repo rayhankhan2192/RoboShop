@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure--zkc5j@6nz7lc3^vn6a_g-z7&^5(aqww(t1giqt)w333l%&)du
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     
     'rest_framework',
     'froala_editor',
+    'corsheaders',
+    'rest_framework_simplejwt.token_blacklist',
     
     'Customusers',
     'product',
@@ -56,6 +58,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
     'corsheaders.middleware.CorsMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8000',
+    'http://localhost:3000',
+
 ]
 
 ROOT_URLCONF = 'RoboShopBackend.urls'
@@ -127,16 +135,27 @@ DJOSER = {
         'user_delete': 'Customusers.serializers.UserCreateSerializers',
         'user_create_password_retype': 'Customusers.serializers.UserCreateSerializers',
     },
-    'LOGIN_FIELD':'email',
-    'USER_CREATE_PASSWORD_RETYPE':True,
-    # 'SEND_CONFIRMATION_EMAIL':False,
-    # 'TOKEN_MODEL':None,
+    'LOGIN_FIELD': 'email',
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+    'SEND_CONFIRMATION_EMAIL': False,
     # 'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
     # 'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS' : ['http://localhost:8000','http://localhost:3000/googleAuth/','https://robomartbd11.web.app/googleAuth/','http://localhost:8000/googleAuth/auth','https://robomartbd11.web.app/googleAuth/auth']
 
 }
 
 AUTH_USER_MODEL = 'Customusers.Users'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
