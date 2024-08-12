@@ -50,33 +50,78 @@ class SubCategorySerializer(serializers.ModelSerializer):
         model= Sub_category
         fields = ["id","name","image"]
 
+# class CatagorySerializer(serializers.ModelSerializer):
+#     #product = ProductSerializerList(source="product_set",many=True,read_only=True)
+#     product = serializers.SerializerMethodField()
+#     sub_category = serializers.SerializerMethodField()
+#     def get_product(self, obj):
+#         categories = obj.product_set.all() 
+#         sub_data = Sub_category.objects.filter(category = obj)
+#         data = []
+#         if sub_data.exists():
+#             for i in sub_data:
+#                 o = i.product_set.all()
+#                 ser_data = ProductSerializerList(o,many=True,context={'request':self.context.get('request')})
+#                 data+=ser_data.data
+        
+#         category_serializer = ProductSerializerList(categories, many=True, context={'request':self.context.get('request')})
+#         data+=category_serializer.data
+#         return data[:7]
+#     class Meta:
+#         model = Category
+#         fields = ["id","name","image","product","sub_category"]
+#     def get_sub_category(self,instance):
+#         sub = Sub_category.objects.filter(category=instance)
+#         if sub.exists():
+#             ser = SubCategorySerializer(sub,many=True, context={'request':self.context.get('request')})
+#             return ser.data
+#         else:
+#             return None
+
 class CatagorySerializer(serializers.ModelSerializer):
-    #product = ProductSerializerList(source="product_set",many=True,read_only=True)
     product = serializers.SerializerMethodField()
     sub_category = serializers.SerializerMethodField()
+
     def get_product(self, obj):
-        categories = obj.product_set.all() 
-        sub_data = Sub_category.objects.filter(category = obj)
+        # Use a set to store unique product IDs
+        product_ids = set()
         data = []
-        if sub_data.exists():
-            for i in sub_data:
-                o = i.product_set.all()
-                ser_data = ProductSerializerList(o,many=True,context={'request':self.context.get('request')})
-                data+=ser_data.data
+
+        # Get products directly related to the category
+        categories = obj.product_set.all()
+        category_serializer = ProductSerializerList(categories, many=True, context={'request': self.context.get('request')})
         
-        category_serializer = ProductSerializerList(categories, many=True, context={'request':self.context.get('request')})
-        data+=category_serializer.data
+        for product in category_serializer.data:
+            if product['id'] not in product_ids:
+                data.append(product)
+                product_ids.add(product['id'])
+
+        #Get products related to subcategories of the category
+        sub_data = Sub_category.objects.filter(category=obj)
+        if sub_data.exists():
+            for sub_category in sub_data:
+                sub_products = sub_category.product_set.all()
+                sub_product_serializer = ProductSerializerList(sub_products, many=True, context={'request': self.context.get('request')})
+                
+                for product in sub_product_serializer.data:
+                    if product['id'] not in product_ids:
+                        data.append(product)
+                        product_ids.add(product['id'])
+
+        # Return only the first 7 products
         return data[:7]
-    class Meta:
-        model = Category
-        fields = ["id","name","image","product","sub_category"]
-    def get_sub_category(self,instance):
+
+    def get_sub_category(self, instance):
         sub = Sub_category.objects.filter(category=instance)
         if sub.exists():
-            ser = SubCategorySerializer(sub,many=True, context={'request':self.context.get('request')})
+            ser = SubCategorySerializer(sub, many=True, context={'request': self.context.get('request')})
             return ser.data
         else:
             return None
+
+    class Meta:
+        model = Category
+        fields = ["id", "name", "image", "product", "sub_category"]
 
 class CatagoryListSerializer(serializers.ModelSerializer):
     sub_category = serializers.SerializerMethodField()
