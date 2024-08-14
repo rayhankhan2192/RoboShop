@@ -18,6 +18,8 @@ class ProductSerializer(serializers.ModelSerializer):
         return ser.data
     
 class ProductSerializerList(serializers.ModelSerializer):
+    category_name = serializers.SerializerMethodField()
+    sub_category_name = serializers.SerializerMethodField()
     class Meta:
         model = Product
         exclude = (
@@ -27,8 +29,13 @@ class ProductSerializerList(serializers.ModelSerializer):
             'after_discount',
             'color',
             'stock',
-            'total_review'
+            'total_review',
         )
+    def get_category_name(self, obj):
+        return [category.name for category in obj.category.all()]
+    
+    def get_sub_category_name(self, obj):
+        return [sub_category.name for sub_category in obj.sub_category.all()]
 
 class HomeSlideSerializer(serializers.ModelSerializer):
     class Meta:
@@ -50,33 +57,6 @@ class SubCategorySerializer(serializers.ModelSerializer):
         model= Sub_category
         fields = ["id","name","image"]
 
-# class CatagorySerializer(serializers.ModelSerializer):
-#     #product = ProductSerializerList(source="product_set",many=True,read_only=True)
-#     product = serializers.SerializerMethodField()
-#     sub_category = serializers.SerializerMethodField()
-#     def get_product(self, obj):
-#         categories = obj.product_set.all() 
-#         sub_data = Sub_category.objects.filter(category = obj)
-#         data = []
-#         if sub_data.exists():
-#             for i in sub_data:
-#                 o = i.product_set.all()
-#                 ser_data = ProductSerializerList(o,many=True,context={'request':self.context.get('request')})
-#                 data+=ser_data.data
-        
-#         category_serializer = ProductSerializerList(categories, many=True, context={'request':self.context.get('request')})
-#         data+=category_serializer.data
-#         return data[:7]
-#     class Meta:
-#         model = Category
-#         fields = ["id","name","image","product","sub_category"]
-#     def get_sub_category(self,instance):
-#         sub = Sub_category.objects.filter(category=instance)
-#         if sub.exists():
-#             ser = SubCategorySerializer(sub,many=True, context={'request':self.context.get('request')})
-#             return ser.data
-#         else:
-#             return None
 
 class CatagorySerializer(serializers.ModelSerializer):
     product = serializers.SerializerMethodField()

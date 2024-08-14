@@ -87,8 +87,8 @@ class Product(models.Model):
   }}
     
     
-    category = models.ManyToManyField(Category, null=True, blank=True)
-    sub_category = models.ManyToManyField(Sub_category, null=True, blank=True) 
+    category = models.ManyToManyField(Category, blank=True)
+    sub_category = models.ManyToManyField(Sub_category, blank=True) 
     name = models.CharField(max_length=1000)
     product_code = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=7, decimal_places=2)

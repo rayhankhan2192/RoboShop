@@ -36,7 +36,6 @@ class Users(AbstractUser):
     first_name = models.CharField(max_length=500,null=True,blank=True)
     last_name = models.CharField(max_length=500,null=True,blank=True)
     is_active = models.BooleanField(default=True)
-    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     balance = models.IntegerField(default=0)
