@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, ProductMedia, Category, Sub_category, HomePage, HomeSlide, Specialoffer
+from .models import Product, ProductMedia, Category, Sub_category
 
 
 class ProductMediaSerializer(serializers.ModelSerializer):
@@ -11,7 +11,14 @@ class ProductSerializer(serializers.ModelSerializer):
     media = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = (
+            'id',
+            'name',
+            'price',
+            'image',
+            'discription',
+            'media',
+        )
     def get_media(self,instance):
         obj = ProductMedia.objects.filter(product = instance)
         ser = ProductMediaSerializer(obj,many=True, context={'request':self.context.get('request')})
@@ -37,15 +44,6 @@ class ProductSerializerList(serializers.ModelSerializer):
     def get_sub_category_name(self, obj):
         return [sub_category.name for sub_category in obj.sub_category.all()]
 
-class HomeSlideSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = HomeSlide
-        fields = '__all__'
-
-class SpecialofferSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Specialoffer
-        fields = '__all__'
 
 class ProductSearchSerializer(serializers.ModelSerializer):
     class Meta:
@@ -108,28 +106,4 @@ class CatagoryListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ["id","name","sub_category"]
-       
-class HomePageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = HomePage
-        fields = '__all__'
-    homeSlider = serializers.SerializerMethodField()
-    specialoffer = serializers.SerializerMethodField()
-    catagory = serializers.SerializerMethodField()
-    catagoryList = serializers.SerializerMethodField()
     
-    def get_homeSlider(self, obj):
-        homeSlider = HomeSlide.objects.filter(isActive = True)
-        homeSlider_serializer = HomeSlideSerializer(homeSlider, many = True, context={'request':self.context.get('request')})
-        return homeSlider_serializer.data
-    
-    def get_specialoffer(self,obj):
-        spacialoffer = Specialoffer.objects.filter(isactive = True)
-        spacialoffer_serializer = SpecialofferSerializer(spacialoffer,many = True, context={'request':self.context.get('request')})
-        return spacialoffer_serializer.data
-    
-    def get_catagory(self,obj):
-        pass
-    def get_catagoryList(self,obj ):
-        pass
-

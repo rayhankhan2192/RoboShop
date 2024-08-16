@@ -115,25 +115,4 @@ class ProductMedia(models.Model):
     def __str__(self) -> str:
         return self.product.name
     
-    
-class HomePage(models.Model):
-    key = models.IntegerField(blank=True, null=True)
-    logo = models.ImageField()
-    shop_poster = models.ImageField()
-    phone = models.CharField(max_length=15)
-    facebook = models.CharField(max_length=200)
-    youtube = models.CharField(max_length=200)
-    linkdin = models.CharField(max_length=200)
-    twiter = models.CharField(max_length=200)
-    instragram = models.CharField(max_length=200)
-    
-class HomeSlide(models.Model):
-    isActive = models.BooleanField(default=True)
-    poster = models.ImageField()
-    link = models.URLField(null=True, blank=True)
 
-class Specialoffer(models.Model):
-    isactive = models.BooleanField(default=True)
-    poster = models.ImageField()
-    link = models.URLField(null=True,blank=True)
-    

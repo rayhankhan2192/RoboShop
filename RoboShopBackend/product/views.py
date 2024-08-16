@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
-from .models import Product, HomePage, Category, Sub_category
-from .serializers import ProductSerializer, HomePageSerializer, ProductSerializerList, CatagorySerializer
+from .models import Product, Category, Sub_category
+from .serializers import ProductSerializer, ProductSerializerList, CatagorySerializer
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -16,7 +16,7 @@ class getProduct(APIView):
             product = Product.objects.get(id = pk)
         except:
             return Response({'error':'Product Not Found!'},status=status.HTTP_404_NOT_FOUND)
-        ser = ProductSerializer(product,many=False,context={'request':request})
+        ser = ProductSerializerList(product,many=False,context={'request':request})
         return Response(ser.data,status=status.HTTP_200_OK)
     
 class AllProduct(APIView):
@@ -26,19 +26,6 @@ class AllProduct(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
-class HomePageView(APIView):
-    def get(self, request, format=None):
-        key = request.query_params.get('key')
-        if not key:
-            return Response({'error': 'Key is required'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        try:
-            homepage = HomePage.objects.get(key=key)
-        except HomePage.DoesNotExist:
-            return Response({'error': 'Give us valid homepage key'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        serializer = HomePageSerializer(homepage, many=False, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class CatagoryList(ListAPIView):
     queryset = Category.objects.all()
