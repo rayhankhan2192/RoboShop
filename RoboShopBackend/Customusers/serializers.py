@@ -1,40 +1,53 @@
 from rest_framework import serializers
-from django.db.models import QuerySet
 from .models import Users
 from djoser.serializers import UserCreateSerializer
-from django.contrib.auth import get_user_model, aauthenticate
+from .email import send_otp_via_mail
+from .email import *
 
 
 class UserCreateSerializers(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = Users
         fields = [
-            'id', 
-            'first_name', 
+            'first_name',
             'last_name',
-            'email',  
+            'email',
             'password',
-            'phone', 
-            ]
-    
+            'phone',
+        ]
+        
     def create(self, validated_data):
-        user = Users(
-            email = validated_data['email'],
-            first_name = validated_data['first_name'],
-            last_name = validated_data['last_name'],
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
+        email = validated_data['email']
+        user_data = {
+            'first_name': validated_data.get('first_name', ''),
+            'last_name': validated_data.get('last_name', ''),
+            'phone': validated_data.get('phone', ''),
+            'password': validated_data.get('password', ''),
+        }
+        
+        otp = str(random.randint(10000, 99999))
+        send_otp_via_mail(email, otp)
+        #session_otp_store[email]['user_data'] = user_data
+        request = self.context.get('request')
+        
+        if request:
+            request.session[email] = {
+            'otp': otp,
+            'created_at': timezone.now().isoformat(),
+            'user_data': user_data
+            }
+        else:
+            raise ValueError("Request object is not available in serializer context")
+        
+        return validated_data
     
-    def update(self, instance, validated_data):
-        print(validated_data)
-        return instance
-
+    
+class VarifyAccountSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp = serializers.CharField()
 
 class ProfileSerializer(serializers.ModelSerializer):
     role = serializers.SerializerMethodField()
-    
     class Meta:
         model = Users
         fields = (
@@ -52,3 +65,6 @@ class ProfileSerializer(serializers.ModelSerializer):
             return "Admin"
         else:
             return "Customer"
+        
+        
+    

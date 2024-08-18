@@ -109,7 +109,9 @@ DATABASES = {
     }
 }
 
-
+# Default: stores sessions in the database
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  
+SESSION_COOKIE_NAME = 'sessionid'
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
