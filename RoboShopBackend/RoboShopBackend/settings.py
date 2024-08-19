@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'froala_editor',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
+    'rest_framework_simplejwt',
+    'rest_framework.authtoken',
     
     'Customusers',
     'product',
@@ -130,23 +132,23 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-DJOSER = {
-    'SEND_ACTIVATION_EMAIL': False,
-    'SERIALIZERS': {
-        'user_create': 'Customusers.serializers.UserCreateSerializers',
-        'user': 'Customusers.serializers.UserCreateSerializers',
-        'user_delete': 'Customusers.serializers.UserCreateSerializers',
-        'user_create_password_retype': 'Customusers.serializers.UserCreateSerializers',
-    },
-    'LOGIN_FIELD': 'email',
-    'USER_CREATE_PASSWORD_RETYPE': True,
-    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
-    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
-    'SEND_CONFIRMATION_EMAIL': False,
-    # 'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
-    # 'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS' : ['http://localhost:8000','http://localhost:3000/googleAuth/','https://robomartbd11.web.app/googleAuth/','http://localhost:8000/googleAuth/auth','https://robomartbd11.web.app/googleAuth/auth']
+# DJOSER = {
+#     'SEND_ACTIVATION_EMAIL': False,
+#     'SERIALIZERS': {
+#         'user_create': 'Customusers.serializers.UserCreateSerializers',
+#         'user': 'Customusers.serializers.UserCreateSerializers',
+#         'user_delete': 'Customusers.serializers.UserCreateSerializers',
+#         'user_create_password_retype': 'Customusers.serializers.UserCreateSerializers',
+#     },
+#     'LOGIN_FIELD': 'email',
+#     'USER_CREATE_PASSWORD_RETYPE': True,
+#     'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
+#     'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+#     'SEND_CONFIRMATION_EMAIL': False,
+#     # 'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
+#     # 'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS' : ['http://localhost:8000','http://localhost:3000/googleAuth/','https://robomartbd11.web.app/googleAuth/','http://localhost:8000/googleAuth/auth','https://robomartbd11.web.app/googleAuth/auth']
 
-}
+# }
 
 AUTH_USER_MODEL = 'Customusers.Users'
 
@@ -157,18 +159,12 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=20),
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=30),
+    'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
-    'VERIFYING_KEY': None,
+    'UPDATE_LAST_LOGIN': True,
     'AUTH_HEADER_TYPES': ('Bearer',),
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
 }
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/

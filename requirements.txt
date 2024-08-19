@@ -7,3 +7,4 @@ mysqlclient
 pillow
 django-froala-editor
 djangorestframework-simplejwt
+djangorestframework-simplejwt[blacklist]
