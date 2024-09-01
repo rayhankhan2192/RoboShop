@@ -8,6 +8,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.http import Http404
 from rest_framework.generics import ListAPIView
+from rest_framework.decorators import api_view
+from django.db.models import Q
 
 
 class getProduct(APIView):
@@ -33,7 +35,7 @@ class CatagoryList(ListAPIView):
     
 class GetCatagoryProducts(APIView):
     def get(self, request, pk, flag):
-        if flag == "category":
+        if flag == "catagory":
             try:
                 category = Category.objects.get(id = pk)
             except:
@@ -42,7 +44,7 @@ class GetCatagoryProducts(APIView):
             serializer = ProductSerializerList(category_product, many = True, context={'request': request})
             return Response(serializer.data)
             
-        elif flag == "subcategory":
+        elif flag == "subcatagory":
             try:
                 sub_category = Sub_category.objects.get(id=pk)
             except:
@@ -52,3 +54,15 @@ class GetCatagoryProducts(APIView):
             return Response(serializer.data,status=status.HTTP_200_OK)
         else:
             return Response({"error":"You Miss valid Flag :)"},status=status.HTTP_406_NOT_ACCEPTABLE)
+        
+
+@api_view(['POST'])
+def search(request):
+    query = request.data.get('query', '')
+
+    if query:
+        products = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+    else:
+        return Response({"products": []})

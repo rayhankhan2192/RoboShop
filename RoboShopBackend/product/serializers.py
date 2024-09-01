@@ -16,7 +16,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'name',
             'price',
             'image',
-            'discription',
+            'description',
             'media',
         )
     def get_media(self,instance):
@@ -48,7 +48,7 @@ class ProductSerializerList(serializers.ModelSerializer):
 class ProductSearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('id','name','price','image','discription',)
+        fields = ('id','name','price','image','description',)
         
 class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:

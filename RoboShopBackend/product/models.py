@@ -95,7 +95,7 @@ class Product(models.Model):
     discount = models.DecimalField(max_digits=7, decimal_places=2)
     after_discount = models.DecimalField(max_digits=7, decimal_places=2)
     image = models.ImageField(upload_to='uploads/', blank=True, null=True)
-    discription = models.TextField(max_length=10000)
+    description = models.TextField(max_length=10000)
     ratting = models.DecimalField(max_digits=5, decimal_places=2)
     color = models.CharField(max_length=1000)
     stock = models.IntegerField()
