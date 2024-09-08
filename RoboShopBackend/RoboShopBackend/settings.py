@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure--zkc5j@6nz7lc3^vn6a_g-z7&^5(aqww(t1giqt)w333l%&)du
 DEBUG = True
 
 #ALLOWED_HOSTS = ["*"]
-ALLOWED_HOSTS = ['192.168.0.109', 'localhost', '127.0.0.1', '10.45.39.6']
+ALLOWED_HOSTS = ['192.168.0.110', 'localhost', '127.0.0.1', '10.45.39.6']
 
 # Application definition
 
@@ -93,23 +93,23 @@ WSGI_APPLICATION = 'RoboShopBackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'roboshop',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3306', 
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'roboshop',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': '3306', 
+#     }
+# }
 
 # Default: stores sessions in the database
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  
