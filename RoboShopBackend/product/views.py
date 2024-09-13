@@ -11,7 +11,6 @@ from rest_framework.generics import ListAPIView
 from rest_framework.decorators import api_view
 from django.db.models import Q
 
-
 class getProduct(APIView):
     def get(self,request,pk,format = None):
         try:
