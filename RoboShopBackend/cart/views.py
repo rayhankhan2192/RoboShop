@@ -16,7 +16,7 @@ class GetCartItems(APIView):
         try:
             cart = Cart.objects.get(user = request.user)
         except:
-            cart = Cart(Users = request.user, count = 0, price = 0)
+            cart = Cart(user = request.user, count = 0, price = 0)
             cart.save()
         cart_seril = cartSerializerList(cart, context = {'request': request})
         return Response(cart_seril.data, status=status.HTTP_200_OK)
